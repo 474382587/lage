@@ -21,27 +21,36 @@ export class Logger {
     this.logs.push(entry);
 
     for (const reporter of Logger.reporters) {
-      reporter.log(entry);
+      reporter.log??(entry);
     }
   }
 
   info(msg: string, data?: LogStructuredData) {
+    console.log('info: ', msg)
     this.log(LogLevel.info, msg, data);
   }
 
   warn(msg: string, data?: LogStructuredData) {
+    console.log('warn: ', msg)
+
     this.log(LogLevel.warn, msg, data);
   }
 
   error(msg: string, data?: LogStructuredData) {
+    console.log('error: ', msg)
+
     this.log(LogLevel.error, msg, data);
   }
 
   verbose(msg: string, data?: LogStructuredData) {
+    console.log('verbose: ', msg)
+
     this.log(LogLevel.verbose, msg, data);
   }
 
   silly(msg: string, data?: LogStructuredData) {
+    console.log('silly: ', msg)
+
     this.log(LogLevel.silly, msg, data);
   }
 }

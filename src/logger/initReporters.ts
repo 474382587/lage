@@ -3,6 +3,7 @@ import { Logger } from "./Logger";
 import { NpmLogReporter } from "./reporters/NpmLogReporter";
 import { LogLevel } from "./LogLevel";
 import { JsonReporter } from "./reporters/JsonReporter";
+import { AdoReporter } from "./reporters/AdoReporter";
 
 export function initReporters(config: Config) {
   // Initialize logger
@@ -12,15 +13,22 @@ export function initReporters(config: Config) {
     logLevel = LogLevel[config.logLevel as LogLevelString];
   }
 
-  const reporters = [
+  const reporters: Array<AdoReporter | JsonReporter | NpmLogReporter> = [
     config.reporter === "json"
       ? new JsonReporter({ logLevel })
       : new NpmLogReporter({
-          logLevel,
-          grouped: config.grouped,
-          npmLoggerOptions: config.loggerOptions
-        }),
+        logLevel,
+        grouped: config.grouped,
+        npmLoggerOptions: config.loggerOptions
+      }),
   ];
+
+  // if ADO env - add this 
+  const isAdoPipeline = !!process.env["SYSTEM_TEAMFOUNDATIONCOLLECTIONURI"];
+  if (isAdoPipeline) {
+    reporters.push(new AdoReporter())
+  }
+
 
   Logger.reporters = reporters;
   return reporters;
