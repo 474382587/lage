@@ -12,12 +12,12 @@ export class AdoReporter implements Reporter {
                 const { packageName, task } = getPackageAndTask(failedTargetId);
                 const taskLogs = targets.get(failedTargetId)?.logger.getLogs();
 
-                msg += `package: ${packageName}  |  task: ${task} | error?: `
+                msg += `package: ${packageName}  |  task: ${task} | error: `
 
                 if (taskLogs) {
                     for (let i = 0; i < taskLogs.length; i += 1) {
-                        if (taskLogs[i].msg.includes('\n')) {
-                            msg += taskLogs[i].msg.replace('\n', '')
+                        if (taskLogs[i].msg.includes('Error detected while')) {
+                            msg += `${taskLogs[i].msg}${taskLogs[i + 1].msg}${taskLogs[i + 2].msg}`
                             break
                         }
                     }
