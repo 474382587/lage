@@ -16,15 +16,18 @@ export class AdoReporter implements Reporter {
 
                 if (taskLogs) {
                     for (let i = 0; i < taskLogs.length; i += 1) {
-                        if (taskLogs[i].msg.includes('Error detected while')) {
-                            msg += `${taskLogs[i].msg}${taskLogs[i + 1].msg}${taskLogs[i + 2].msg}`
-                            break
-                        }
+
+                        msg += taskLogs?.map((entry) => entry.msg).join("\n")
+                        // if (taskLogs[i].msg.includes('Error detected while')) {
+                        //     msg += `${taskLogs[i].msg}${taskLogs[i + 1].msg}${taskLogs[i + 2].msg}`
+                        //     break
+                        // }
                     }
                 }
             }
-
+            console.log(`##[group]Beginning of errors`)
             console.log(`##vso[task.logissue type=error]${msg}`)
+            console.log(`##[endgroup]`)
         }
     }
 }
